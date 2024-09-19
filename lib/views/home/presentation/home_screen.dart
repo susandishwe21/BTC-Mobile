@@ -25,6 +25,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     ref.read(favouriteStateNotifierProvider.notifier).getFavoriteBTCPriceList();
+    if (btcPriceList.isEmpty) {
+      ref
+          .read(favouriteStateNotifierProvider.notifier)
+          .removeFavoriteBTCPriceList();
+    }
   }
 
   @override
@@ -92,13 +97,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           const SizedBox(width: 10),
           IconButton(
             onPressed: isExportLoading
-                ? () {}
+                ? null
                 : ref
                     .read(exportExcelStateNotifierProvider.notifier)
                     .exportExcelFile,
-            icon: const Icon(
+            icon: Icon(
               Icons.upload_file_outlined,
-              color: Colors.white,
+              color: isExportLoading ? Colors.grey : Colors.white,
             ),
           ),
           const SizedBox(width: 10),
@@ -107,12 +112,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: isImportLoading
           ? loadingWidget(context)
           : ListView.separated(
+              padding: const EdgeInsets.symmetric(vertical: 10),
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return const SizedBox.shrink();
                 }
-                print(favouriteList.contains(btcPriceList[index]));
                 return ListTile(
                   leading: Container(
                     height: 35,
@@ -126,7 +131,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ),
                   title: Text(
-                    btcPriceList[index].openPrice,
+                    "Open Price\n${btcPriceList[index].openPrice}",
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 14,

@@ -15,102 +15,6 @@ class PieChart2State extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: const Text(
-          "Favourite",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-      body: AspectRatio(
-        aspectRatio: 1.3,
-        child: Row(
-          children: <Widget>[
-            const SizedBox(
-              height: 18,
-            ),
-            Expanded(
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: PieChart(
-                  PieChartData(
-                    pieTouchData: PieTouchData(
-                      touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                        setState(() {
-                          if (!event.isInterestedForInteractions ||
-                              pieTouchResponse == null ||
-                              pieTouchResponse.touchedSection == null) {
-                            touchedIndex = -1;
-                            return;
-                          }
-                          touchedIndex = pieTouchResponse
-                              .touchedSection!.touchedSectionIndex;
-                        });
-                      },
-                    ),
-                    borderData: FlBorderData(
-                      show: false,
-                    ),
-                    sectionsSpace: 0,
-                    centerSpaceRadius: 40,
-                    sections: showingSections(),
-                  ),
-                ),
-              ),
-            ),
-            const Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Indicator(
-                  color: Colors.blue,
-                  text: 'Open Price',
-                  isSquare: true,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Indicator(
-                  color: Colors.yellow,
-                  text: 'Low',
-                  isSquare: true,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Indicator(
-                  color: Colors.red,
-                  text: 'High',
-                  isSquare: true,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Indicator(
-                  color: Colors.green,
-                  text: 'Close',
-                  isSquare: true,
-                ),
-                SizedBox(
-                  height: 18,
-                ),
-              ],
-            ),
-            const SizedBox(
-              width: 28,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  List<PieChartSectionData> showingSections() {
     double totalOpenPrice = btcPriceList.fold(
         0.0, (sum, item) => sum + (double.tryParse(item.openPrice) ?? 0.0));
 
@@ -125,7 +29,150 @@ class PieChart2State extends State {
 
     double totalSum =
         totalOpenPrice + totalLowPrice + totalHighPrice + totalClosePrice;
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.orange,
+        title: const Text(
+          "Favourite",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AspectRatio(
+            aspectRatio: 1.3,
+            child: Row(
+              children: <Widget>[
+                const SizedBox(
+                  height: 18,
+                ),
+                Expanded(
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: PieChart(
+                      PieChartData(
+                        pieTouchData: PieTouchData(
+                          touchCallback:
+                              (FlTouchEvent event, pieTouchResponse) {
+                            setState(() {
+                              if (!event.isInterestedForInteractions ||
+                                  pieTouchResponse == null ||
+                                  pieTouchResponse.touchedSection == null) {
+                                touchedIndex = -1;
+                                return;
+                              }
+                              touchedIndex = pieTouchResponse
+                                  .touchedSection!.touchedSectionIndex;
+                            });
+                          },
+                        ),
+                        borderData: FlBorderData(
+                          show: false,
+                        ),
+                        sectionsSpace: 0,
+                        centerSpaceRadius: 40,
+                        sections: showingSections(totalOpenPrice, totalLowPrice,
+                            totalHighPrice, totalClosePrice, totalSum),
+                      ),
+                    ),
+                  ),
+                ),
+                const Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Indicator(
+                      color: Colors.blue,
+                      text: 'Open Price',
+                      isSquare: true,
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Indicator(
+                      color: Colors.yellow,
+                      text: 'Low',
+                      isSquare: true,
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Indicator(
+                      color: Colors.red,
+                      text: 'High',
+                      isSquare: true,
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Indicator(
+                      color: Colors.green,
+                      text: 'Close',
+                      isSquare: true,
+                    ),
+                    SizedBox(
+                      height: 18,
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  width: 28,
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Open Price : ${totalOpenPrice.toStringAsFixed(1)}\n",
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  "Low Price : ${totalLowPrice.toStringAsFixed(1)}\n",
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  "High Price : ${totalHighPrice.toStringAsFixed(1)}\n",
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  "Close Price : ${totalClosePrice.toStringAsFixed(1)}",
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
 
+  List<PieChartSectionData> showingSections(
+      double totalOpenPrice,
+      double totalLowPrice,
+      double totalHighPrice,
+      double totalClosePrice,
+      double totalSum) {
     return List.generate(4, (i) {
       double value;
       String title;

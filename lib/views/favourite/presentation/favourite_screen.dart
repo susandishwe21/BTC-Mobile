@@ -46,6 +46,7 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
         ),
       ),
       body: ListView.separated(
+        padding: const EdgeInsets.symmetric(vertical: 20),
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return ListTile(
@@ -61,7 +62,7 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
               ),
             ),
             title: Text(
-              favBtcPriceList[index].openPrice,
+              "Open Price\n${favBtcPriceList[index].openPrice}",
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 14,

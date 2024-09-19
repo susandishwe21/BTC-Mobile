@@ -13,14 +13,14 @@ class ExportExcelStateNotifier extends StateNotifier<ExportExcelState> {
 
   Future<void> exportExcelFile() async {
     state = const ExportExcelState.loading();
-
     var createExcelFile = Excel.createExcel();
     createExcelFile.rename("Sheet1", "BTC Prices");
-
     Sheet createSheet = createExcelFile['BTC Prices'];
     createSheet.appendRow([TextCellValue('BTC Price')]);
     for (var data in btcPriceList) {
-      createSheet.appendRow([TextCellValue(data.openPrice)]);
+      if (data.openPrice != "Open") {
+        createSheet.appendRow([TextCellValue(data.openPrice)]);
+      }
     }
     final directory = await getExternalStorageDirectory();
     final path = '${directory!.path}/EarthlikeBTCPrice';
@@ -28,7 +28,6 @@ class ExportExcelStateNotifier extends StateNotifier<ExportExcelState> {
     if (!await Directory(path).exists()) {
       await Directory(path).create(recursive: true);
     }
-
     final filePath = '$path/BTCPrice.xlsx';
     final file = File(filePath);
     file.writeAsBytesSync(createExcelFile.encode()!);

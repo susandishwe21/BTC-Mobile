@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:btc_mobile/views/favourite/repository/state/favourite_state.dart';
 import 'package:btc_mobile/views/home/domain/btc_price.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,5 +32,11 @@ class FavouriteStateNotifier extends StateNotifier<FavouriteState> {
           .toList();
       state = FavouriteState.loadExcelData(dataList);
     }
+  }
+
+  Future<void> removeFavoriteBTCPriceList() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    state = const FavouriteState.loadExcelData([]);
   }
 }
