@@ -25,12 +25,6 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // WidgetsBinding.instance.addPostFrameCallback((tp) {
-    //   ref
-    //       .read(favouriteStateNotifierProvider.notifier)
-    //       .getFavoriteBTCPriceList();
-    // });
-
     ref.listen(favouriteStateNotifierProvider, (pre, next) {
       if (next is FavouriteData) {
         setState(() {

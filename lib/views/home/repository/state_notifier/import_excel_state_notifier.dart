@@ -29,7 +29,6 @@ class ImportExcelStateNotifier extends StateNotifier<ImportExcelState> {
       final selectedFilePath = file.path;
       btcPricesList = await processExcelWithIsolate(filePath: selectedFilePath);
       btcPriceList = btcPricesList;
-      print("$btcPricesList");
       state = ImportExcelState.loadExcelData(btcPricesList);
     } catch (e) {
       state = const ImportExcelState.error();
@@ -63,12 +62,14 @@ class ImportExcelStateNotifier extends StateNotifier<ImportExcelState> {
         String openPrice = row[2]?.value.toString() ?? '';
         String high = row[3]?.value.toString() ?? '';
         String low = row[4]?.value.toString() ?? '';
+        String close = row[5]?.value.toString() ?? '';
         BTCPrice btcPrice = BTCPrice(
           startDate: startDate,
           endDate: endDate,
           openPrice: openPrice,
           high: high,
           low: low,
+          close: close,
         );
         btcPrices.add(btcPrice);
       }

@@ -4,6 +4,7 @@ class BTCPrice {
   final String openPrice;
   final String high;
   final String low;
+  final String close;
 
   const BTCPrice({
     this.startDate = "",
@@ -11,6 +12,7 @@ class BTCPrice {
     this.openPrice = "",
     this.high = "",
     this.low = "",
+    this.close = "",
   });
   factory BTCPrice.fromJson(Map<String, dynamic> json) {
     return BTCPrice(
@@ -19,6 +21,7 @@ class BTCPrice {
       openPrice: json['open'],
       high: json['high'],
       low: json['low'],
+      close: json['close'],
     );
   }
   Map<String, dynamic> toJson() {
@@ -28,6 +31,7 @@ class BTCPrice {
       'open': openPrice,
       'high': high,
       'low': low,
+      'close': close,
     };
   }
 
@@ -39,7 +43,8 @@ class BTCPrice {
         other.endDate == endDate &&
         other.openPrice == openPrice &&
         other.high == high &&
-        other.low == low;
+        other.low == low &&
+        other.close == close;
   }
 
   @override
@@ -48,6 +53,7 @@ class BTCPrice {
         endDate.hashCode ^
         openPrice.hashCode ^
         high.hashCode ^
-        low.hashCode;
+        low.hashCode ^
+        close.hashCode;
   }
 }
