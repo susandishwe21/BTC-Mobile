@@ -1,9 +1,9 @@
+import 'package:btc_mobile/views/favourite/repository/state/favourite_state.dart';
 import 'package:btc_mobile/views/home/repository/state/export_excel_state.dart';
 import 'package:btc_mobile/views/home/repository/state/import_excel_state.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import '../../favourite/repository/provider/favourite_provider.dart';
 import '../domain/btc_price.dart';
 import '../repository/provider/home_provider.dart';
 import 'widgets/loading_widget.dart';
@@ -20,9 +20,22 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool isExportLoading = false;
   bool isImportLoading = false;
+  List<BTCPrice> favouriteList = [];
+  @override
+  void initState() {
+    super.initState();
+    ref.read(favouriteStateNotifierProvider.notifier).getFavoriteBTCPriceList();
+  }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(favouriteStateNotifierProvider, (pre, next) {
+      if (next is FavouriteData) {
+        setState(() {
+          favouriteList = next.favBtcPriceList;
+        });
+      }
+    });
     ref.listen(exportExcelStateNotifierProvider, (pre, next) {
       if (next is ExportLoading) {
         setState(() {
@@ -54,6 +67,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         });
       }
     });
+
     return Scaffold(
       backgroundColor: const Color(0xffF6F6F6),
       appBar: AppBar(
@@ -71,24 +85,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 .read(importExcelStateNotifierProvider.notifier)
                 .importExcelFile,
             icon: const Icon(
-              Icons.import_export,
+              Icons.file_download_outlined,
               color: Colors.white,
             ),
           ),
           const SizedBox(width: 10),
           IconButton(
-            onPressed: ref
-                .read(exportExcelStateNotifierProvider.notifier)
-                .exportExcelFile,
+            onPressed: isExportLoading
+                ? () {}
+                : ref
+                    .read(exportExcelStateNotifierProvider.notifier)
+                    .exportExcelFile,
             icon: const Icon(
-              Icons.file_download,
+              Icons.upload_file_outlined,
               color: Colors.white,
             ),
           ),
           const SizedBox(width: 10),
         ],
       ),
-      body: isExportLoading || isImportLoading
+      body: isImportLoading
           ? loadingWidget(context)
           : ListView.separated(
               shrinkWrap: true,
@@ -96,6 +112,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 if (index == 0) {
                   return const SizedBox.shrink();
                 }
+                print(favouriteList.contains(btcPriceList[index]));
                 return ListTile(
                   leading: Container(
                     height: 35,
@@ -116,13 +133,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ),
                   onTap: () {
-                    print("FAV ::: ");
+                    ref
+                        .read(favouriteStateNotifierProvider.notifier)
+                        .loadFavouriteData(btcPriceList[index]);
                   },
-                  trailing: IconButton(
-                    onPressed: () {
-                      print("FAV ::: ");
-                    },
-                    icon: const Icon(Icons.favorite_outline),
+                  trailing: Icon(
+                    favouriteList.contains(btcPriceList[index])
+                        ? Icons.favorite
+                        : Icons.favorite_outline,
+                    color:
+                        favouriteList.any((data) => data == btcPriceList[index])
+                            ? Colors.orange
+                            : Colors.black.withOpacity(0.7),
                   ),
                 );
               },

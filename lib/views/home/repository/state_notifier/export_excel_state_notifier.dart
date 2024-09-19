@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:btc_mobile/views/home/presentation/home_screen.dart';
 import 'package:btc_mobile/views/home/repository/state/export_excel_state.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
@@ -18,9 +19,9 @@ class ExportExcelStateNotifier extends StateNotifier<ExportExcelState> {
 
     Sheet createSheet = createExcelFile['BTC Prices'];
     createSheet.appendRow([TextCellValue('BTC Price')]);
-    // for (var data in openPrices) {
-    //   sheetObject.appendRow([TextCellValue(data)]);
-    // }
+    for (var data in btcPriceList) {
+      createSheet.appendRow([TextCellValue(data.openPrice)]);
+    }
     final directory = await getExternalStorageDirectory();
     final path = '${directory!.path}/EarthlikeBTCPrice';
 

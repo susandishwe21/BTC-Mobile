@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/btc_price.dart';
+import '../../presentation/home_screen.dart';
 import '../state/import_excel_state.dart';
 
 class ImportExcelStateNotifier extends StateNotifier<ImportExcelState> {
@@ -27,6 +28,7 @@ class ImportExcelStateNotifier extends StateNotifier<ImportExcelState> {
         ..writeAsBytesSync(bytes);
       final selectedFilePath = file.path;
       btcPricesList = await processExcelWithIsolate(filePath: selectedFilePath);
+      btcPriceList = btcPricesList;
       print("$btcPricesList");
       state = ImportExcelState.loadExcelData(btcPricesList);
     } catch (e) {
@@ -44,8 +46,6 @@ class ImportExcelStateNotifier extends StateNotifier<ImportExcelState> {
       return response;
     } catch (e) {
       return [];
-    } finally {
-      receivePort.close();
     }
   }
 
@@ -58,7 +58,6 @@ class ImportExcelStateNotifier extends StateNotifier<ImportExcelState> {
     for (var table in excel.tables.keys) {
       final tableSheet = excel.tables[table];
       for (var row in tableSheet!.rows) {
-        // if (row.length < 5) continue;
         String startDate = row[0]?.value.toString() ?? '';
         String endDate = row[1]?.value.toString() ?? '';
         String openPrice = row[2]?.value.toString() ?? '';
