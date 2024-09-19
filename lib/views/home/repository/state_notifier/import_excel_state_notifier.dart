@@ -57,19 +57,13 @@ class ImportExcelStateNotifier extends StateNotifier<ImportExcelState> {
     for (var table in excel.tables.keys) {
       final tableSheet = excel.tables[table];
       for (var row in tableSheet!.rows) {
-        String startDate = row[0]?.value.toString() ?? '';
-        String endDate = row[1]?.value.toString() ?? '';
-        String openPrice = row[2]?.value.toString() ?? '';
-        String high = row[3]?.value.toString() ?? '';
-        String low = row[4]?.value.toString() ?? '';
-        String close = row[5]?.value.toString() ?? '';
         BTCPrice btcPrice = BTCPrice(
-          startDate: startDate,
-          endDate: endDate,
-          openPrice: openPrice,
-          high: high,
-          low: low,
-          close: close,
+          startDate: row[0]?.value.toString() ?? '',
+          endDate: row[1]?.value.toString() ?? '',
+          openPrice: row[2]?.value.toString() ?? '',
+          high: row[3]?.value.toString() ?? '',
+          low: row[4]?.value.toString() ?? '',
+          close: row[5]?.value.toString() ?? '',
         );
         btcPrices.add(btcPrice);
       }
