@@ -1,40 +1,47 @@
 import 'package:btc_mobile/views/home/presentation/home_screen.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../home/repository/provider/home_provider.dart';
+import '../../home/repository/state/import_excel_state.dart';
 import 'widgets/indicator.dart';
 
-class ChartScreen extends StatefulWidget {
+class ChartScreen extends ConsumerStatefulWidget {
   const ChartScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => PieChart2State();
+  ConsumerState<ConsumerStatefulWidget> createState() => PieChart2State();
 }
 
-class PieChart2State extends State {
+class PieChart2State extends ConsumerState<ChartScreen> {
   int touchedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
     double totalOpenPrice = btcPriceList.fold(
         0.0, (sum, item) => sum + (double.tryParse(item.openPrice) ?? 0.0));
-
     double totalLowPrice = btcPriceList.fold(
         0.0, (sum, item) => sum + (double.tryParse(item.low) ?? 0.0));
-
     double totalHighPrice = btcPriceList.fold(
         0.0, (sum, item) => sum + (double.tryParse(item.high) ?? 0.0));
-
     double totalClosePrice = btcPriceList.fold(
         0.0, (sum, item) => sum + (double.tryParse(item.close) ?? 0.0));
-
     double totalSum =
         totalOpenPrice + totalLowPrice + totalHighPrice + totalClosePrice;
+
+    ref.listen(importExcelStateNotifierProvider, (pre, next) {
+      if (next is ImportExcelData) {
+        setState(() {
+          btcPriceList = next.btcPricesList;
+        });
+      }
+    });
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.orange,
         title: const Text(
-          "Favourite",
+          "Chart",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
