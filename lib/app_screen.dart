@@ -28,6 +28,8 @@ class _AppScreenState extends State<AppScreen> {
 
   Widget bottomNavBarWidget() {
     return BottomNavigationBar(
+      elevation: 0,
+      backgroundColor: Colors.white,
       currentIndex: currentIndex,
       onTap: (value) {
         setState(() {

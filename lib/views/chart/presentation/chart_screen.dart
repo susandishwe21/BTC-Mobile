@@ -11,6 +11,7 @@ class _ChartScreenState extends State<ChartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xffF6F6F6),
       appBar: AppBar(
         backgroundColor: Colors.orange,
         title: const Text(
